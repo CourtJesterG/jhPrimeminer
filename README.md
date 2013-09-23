@@ -3,7 +3,8 @@ jhPrimeminer
 
 jhPrimeminer is a optimized pool miner for primecoin.
 
-This is Ray De Bourbon's 3.3 build, merged with deschlers linux version.
+This is Ray De Bourbon's 3.3 build, merged with deschlers linux version by tandyuk.
+(forked by girino to tweek it for cygwin and OSX)
 
 Requirements
 Openssl and libgmp.
@@ -12,11 +13,13 @@ Openssl and libgmp.
 
 Build instructions:
 
-CentOS:
+OSX:
 
-yum groupinstall "Development Tools"
+install xcode.
 
-yum install openssl openssl-devel openssh-clients gmp gmp-devel gmp-static git
+install mac ports.
+
+sudo port install openssl openssh gmp git
 
 git clone https://github.com/tandyuk/jhPrimeminer.git
 
@@ -25,9 +28,9 @@ cd jhPrimeminer
 make
 
 
-Ubuntu:
+Cygwin:
 
-apt-get install build-essential libssl-dev openssl git libgmp libgmp-dev
+install g++, libssl-dev, openssl, git, libgmp, libgmp-dev, etc using setup.exe
 
 git clone https://github.com/tandyuk/jhPrimeminer.git
 
@@ -39,6 +42,6 @@ make
 
 If you found this helpful PLEASE support my work.
 
-XPM: AYwmNUt6tjZJ1nPPUxNiLCgy1D591RoFn4
+XPM: AeMmfENnRnE3EHweGBBN84ch7CjNrRQskV
 
-BTC: 1P6YrvFkwYGcw9sEFVQt32Cn7JJKx4pFG2
+BTC: 1GiRiNoKznfGbt8bkU1Ley85TgVV7ZTXce

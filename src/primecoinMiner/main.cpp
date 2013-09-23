@@ -1572,6 +1572,7 @@ int main(int argc, char **argv)
 	"|    JH: AQjz9cAUZfjFgHXd8aTiWaKKbb3LoCVm2J                       |" << std::endl <<
 	"|    rdebourbon: AUwKMCYCacE6Jq1rsLcSEHSNiohHVVSiWv               |" << std::endl <<
 	"|    tandyuk: AYwmNUt6tjZJ1nPPUxNiLCgy1D591RoFn4                  |" << std::endl <<
+	"|    girino: AeMmfENnRnE3EHweGBBN84ch7CjNrRQskV                  |" << std::endl <<
 	" ============================================================================ " << std::endl <<
 	"Launching miner..." << std::endl;
 	// set priority lower so the user still can do other things
