@@ -21,7 +21,7 @@ install mac ports.
 
 sudo port install openssl openssh gmp git
 
-git clone https://github.com/tandyuk/jhPrimeminer.git
+git clone https://github.com/girino/jhPrimeminer.git
 
 cd jhPrimeminer
 
@@ -32,7 +32,7 @@ Cygwin:
 
 install g++, libssl-dev, openssl, git, libgmp, libgmp-dev, etc using setup.exe
 
-git clone https://github.com/tandyuk/jhPrimeminer.git
+git clone https://github.com/girino/jhPrimeminer.git
 
 cd jhPrimeminer
 
