@@ -1,10 +1,15 @@
 CXX = g++
-CFLAGS = -mtune=native -Wall -Wextra -std=c++0x -O3 -fomit-frame-pointer
+CFLAGS = -mtune=native -Wall -Wextra -O3 -fomit-frame-pointer
 
 OSVERSION := $(shell uname -s)
 LIBS = -lgmp -lgmpxx -lcrypto -lssl -pthread
 
+ifeq ($(OSTYPE),cygwin)
+	CFLAGS += -std=gnu++0x
+endif
+
 ifeq ($(OSVERSION),Linux)
+	CFLAGS += -std=c++0x
 	LIBS += -lrt
 endif
 

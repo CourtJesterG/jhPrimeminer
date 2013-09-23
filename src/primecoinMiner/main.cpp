@@ -1442,6 +1442,8 @@ int jhMiner_main_xptMode()
 					workData.xptClient = xptClient_connect(&jsonRequestTarget, commandlineInput.numThreads);
 					if( workData.xptClient )
 						break;
+					std::cout << "Failed to reconnect, retry in 30 seconds" << std::endl;
+					Sleep(1000*30);
 				}
 			}
 			// has the block data changed?
