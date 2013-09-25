@@ -1320,6 +1320,30 @@ int jhMiner_main_getworkMode()
    return 0;
 }
 
+int getIpAddr(char* ipText, char* addr) {
+#ifdef _WIN32
+	hostent* hostInfo = gethostbyname(addr);
+	if( hostInfo == NULL )
+	{
+		printf("Cannot resolve '%s'. Is it a valid URL?\n", addr);
+		exit(-1);
+	}
+	void** ipListPtr = (void**)hostInfo->h_addr_list;
+	uint32 ip = 0xFFFFFFFF;
+	if( ipListPtr[0] )
+	{
+		ip = *(uint32*)ipListPtr[0];
+	}
+	esprintf(ipText, "%d.%d.%d.%d", ((ip>>0)&0xFF), ((ip>>8)&0xFF), ((ip>>16)&0xFF), ((ip>>24)&0xFF));
+#else
+  struct addrinfo hints, *res;
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family = AF_INET;
+  getaddrinfo(addr, 0, &hints, &res);
+  inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr, ipText, INET_ADDRSTRLEN);
+#endif
+}
+
 /*
  * Mainloop when using xpt mode
  */
@@ -1439,6 +1463,8 @@ int jhMiner_main_xptMode()
 				xptWorkIdentifier = 0xFFFFFFFF;
 				while( true )
 				{
+					// resolve hostname before reconnecting
+					getIpAddr(jsonRequestTarget.ip, commandlineInput.host);
 					workData.xptClient = xptClient_connect(&jsonRequestTarget, commandlineInput.numThreads);
 					if( workData.xptClient )
 						break;
@@ -1596,29 +1622,8 @@ int main(int argc, char **argv)
   pthread_mutex_init(&workData.cs, NULL);
 #endif
 	// connect to host
-#ifdef _WIN32
-	hostent* hostInfo = gethostbyname(commandlineInput.host);
-	if( hostInfo == NULL )
-	{
-		printf("Cannot resolve '%s'. Is it a valid URL?\n", commandlineInput.host);
-		exit(-1);
-	}
-	void** ipListPtr = (void**)hostInfo->h_addr_list;
-	uint32 ip = 0xFFFFFFFF;
-	if( ipListPtr[0] )
-	{
-		ip = *(uint32*)ipListPtr[0];
-	}
-	char ipText[32];
-	esprintf(ipText, "%d.%d.%d.%d", ((ip>>0)&0xFF), ((ip>>8)&0xFF), ((ip>>16)&0xFF), ((ip>>24)&0xFF));
-#else
-  struct addrinfo hints, *res;
-  memset(&hints, 0, sizeof(hints));
-  hints.ai_family = AF_INET;
-  getaddrinfo(commandlineInput.host, 0, &hints, &res);
   char ipText[32];
-  inet_ntop(AF_INET, &((struct sockaddr_in *)res->ai_addr)->sin_addr, ipText, INET_ADDRSTRLEN);
-#endif
+  getIpAddr(ipText, commandlineInput.host);
   
 	// setup RPC connection data (todo: Read from command line)
 	jsonRequestTarget.ip = ipText;
@@ -1697,6 +1702,8 @@ int main(int argc, char **argv)
 					break;
 						std::cout << "Failed to connect, retry in 30 seconds" << std::endl;
 				Sleep(1000*30);
+				// resolve address before reconnecting
+				getIpAddr(jsonRequestTarget.ip, commandlineInput.host);
 			}
 			// make sure we are successfully authenticated
 			while( xptClient_isDisconnected(workData.xptClient, NULL) == false && xptClient_isAuthenticated(workData.xptClient) == false )
