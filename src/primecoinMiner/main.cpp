@@ -575,6 +575,7 @@ typedef struct
 	uint32 initialPrimorial;
 	uint32 sieveExtensions;
 	bool printDebug;
+	bool disableInput;
 }commandlineInput_t;
 
 commandlineInput_t commandlineInput = {0};
@@ -776,15 +777,7 @@ void jhMiner_parseCommandline(int argc, char **argv)
 		else if( memcmp(argument, "-tune", 6)==0 )
 		{
          // -tune
-			if( cIdx >= argc )
-			{
-            cout << "Missing flag after -tune option" << endl;
-				exit(0);
-			}
-			if (memcmp(argument, "true", 5) == 0 ||  memcmp(argument, "1", 2) == 0)
-				commandlineInput.enableCacheTunning = true;
-
-			cIdx++;
+			commandlineInput.enableCacheTunning = true;
 		}
       else if( memcmp(argument, "-target", 8)==0 )
       {
@@ -853,16 +846,14 @@ void jhMiner_parseCommandline(int argc, char **argv)
   else if( memcmp(argument, "-debug", 6)==0 )
       {
          // -debug
-         if( cIdx >= argc )
-         {
-            cout << "Missing flag after -debug option" << endl;
-            exit(0);
-         }
-         if (memcmp(argument, "true", 5) == 0 ||  memcmp(argument, "1", 2) == 0)
-            commandlineInput.printDebug = true;
-         cIdx++;
+         commandlineInput.printDebug = true;
       }
 
+      else if( memcmp(argument, "-noinput", 8)==0 )
+      {
+    	 // -noinput
+         commandlineInput.disableInput = true;
+      }
 		else if( memcmp(argument, "-help", 6)==0 || memcmp(argument, "--help", 7)==0 )
 		{
 			jhMiner_printHelp();
@@ -1147,7 +1138,8 @@ bool appQuitSignal = false;
 static void input_thread(){
 #else
 void *input_thread(void *){
-static struct termios oldt, newt;
+
+	static struct termios oldt, newt;
     /*tcgetattr gets the parameters of the current terminal
     STDIN_FILENO will tell tcgetattr that it should write the settings
     of stdin to oldt*/
@@ -1166,7 +1158,7 @@ static struct termios oldt, newt;
 
 #endif
 
-	while (true) {
+	while (!commandlineInput.disableInput) {
 		int input = getchar();
 		switch (input) {
 		case 'q': case 'Q': case 3: //case 27:
